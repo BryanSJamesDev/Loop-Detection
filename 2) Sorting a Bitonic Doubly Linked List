@@ -1,0 +1,126 @@
+import java.util.*;
+
+// Definition of the Node class for a doubly linked list
+class Node {
+    int data;
+    Node next;
+    Node prev;
+
+    Node(int d) {
+        data = d;
+        next = null;
+        prev = null;
+    }
+}
+
+// Main class to handle the doubly linked list operations
+public class BitonicDLL {
+    
+    // Method to push new data to the front of the list
+    static Node push(Node head, int new_data) {
+        Node new_node = new Node(new_data);
+        new_node.next = head;
+        if (head != null) {
+            head.prev = new_node;
+        }
+        head = new_node;
+        return head;
+    }
+
+    // Method to reverse a doubly linked list from the given node
+    static Node reverse(Node head) {
+        Node current = head;
+        Node temp = null;
+        while (current != null) {
+            temp = current.prev;
+            current.prev = current.next;
+            current.next = temp;
+            current = current.prev;
+        }
+        if (temp != null) {
+            head = temp.prev;
+        }
+        return head;
+    }
+
+    // Method to merge two sorted doubly linked lists
+    static Node merge(Node first, Node second) {
+        if (first == null) {
+            return second;
+        }
+        if (second == null) {
+            return first;
+        }
+        if (first.data < second.data) {
+            first.next = merge(first.next, second);
+            first.next.prev = first;
+            first.prev = null;
+            return first;
+        } else {
+            second.next = merge(first, second.next);
+            second.next.prev = second;
+            second.prev = null;
+            return second;
+        }
+    }
+
+    // Method to sort the bitonic doubly linked list
+    static Node sortBitonicDLL(Node head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        Node current = head;
+        // Finding the peak element
+        while (current.next != null && current.data < current.next.data) {
+            current = current.next;
+        }
+
+        Node second = current.next;
+        if (second != null) {
+            second.prev = null;
+            current.next = null;
+            second = reverse(second);
+        }
+
+        return merge(head, second);
+    }
+
+    // Utility method to print the doubly linked list
+    static void printList(Node node) {
+        Node last = null;
+        System.out.println("Traversal in forward Direction");
+        while (node != null) {
+            System.out.print(node.data + " ");
+            last = node;
+            node = node.next;
+        }
+        System.out.println();
+        System.out.println("Traversal in reverse direction");
+        while (last != null) {
+            System.out.print(last.data + " ");
+            last = last.prev;
+        }
+        System.out.println();
+    }
+
+    // Main method to run the program
+    public static void main(String[] args) {
+        Node head = null;
+        head = push(head, 2);
+        head = push(head, 6);
+        head = push(head, 7);
+        head = push(head, 12);
+        head = push(head, 8);
+        head = push(head, 5);
+        head = push(head, 1);
+        
+        System.out.println("Original List:");
+        printList(head);
+
+        head = sortBitonicDLL(head);
+        System.out.println("Sorted List:");
+        printList(head);
+    }
+}
+
