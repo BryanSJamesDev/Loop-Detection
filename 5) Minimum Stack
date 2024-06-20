@@ -1,0 +1,66 @@
+import java.util.Stack;
+
+// MinStack class to handle minimum retrieval operation efficiently
+class MinStack {
+    private Stack<Integer> mainStack;  // Stack to store all elements
+    private Stack<Integer> minStack;   // Stack to store minimum elements
+
+    // Constructor
+    public MinStack() {
+        mainStack = new Stack<>();
+        minStack = new Stack<>();
+    }
+
+    // Method to push a value onto the stack
+    public void push(int value) {
+        mainStack.push(value);
+        // Push value to minStack if it's empty or value is smaller or equal to the current minimum
+        if (minStack.isEmpty() || value <= getMin()) {
+            minStack.push(value);
+        }
+    }
+
+    // Method to pop the top element from the stack
+    public void pop() {
+        if (!mainStack.isEmpty()) {
+            int value = mainStack.pop();
+            // If the value is the current minimum, pop it from the minStack as well
+            if (value == getMin()) {
+                minStack.pop();
+            }
+        }
+    }
+
+    // Method to get the top element of the stack
+    public int top() {
+        if (!mainStack.isEmpty()) {
+            return mainStack.peek();
+        }
+        throw new IllegalStateException("Stack is empty");
+    }
+
+    // Method to retrieve the minimum element from the stack
+    public int getMin() {
+        if (!minStack.isEmpty()) {
+            return minStack.peek();
+        }
+        throw new IllegalStateException("Stack is empty");
+    }
+}
+
+// Main class to run the program
+public class Main {
+    public static void main(String[] args) {
+        MinStack stack = new MinStack();
+        stack.push(5);
+        stack.push(2);
+        stack.push(7);
+        stack.push(1);
+
+        System.out.println("Minimum Element: " + stack.getMin());  // Output: Minimum Element: 1
+
+        stack.pop();
+        System.out.println("Top Element: " + stack.top());  // Output: Top Element: 7
+        System.out.println("After Pop New Minimum Element: " + stack.getMin());  // Output: After Pop New Minimum Element: 2
+    }
+}
