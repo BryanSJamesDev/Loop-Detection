@@ -1,0 +1,47 @@
+import java.util.Scanner;
+
+class CelebrityProblem {
+    // Function to find the celebrity
+    int findCelebrity(int[][] M, int n) {
+        int candidate = 0;
+
+        // First pass to find the potential celebrity
+        for (int i = 1; i < n; i++) {
+            if (M[candidate][i] == 1) {
+                candidate = i;
+            }
+        }
+
+        // Second pass to verify the candidate
+        for (int i = 0; i < n; i++) {
+            // Check if the candidate knows anyone or if there is someone who does not know the candidate
+            if (i != candidate && (M[candidate][i] == 1 || M[i][candidate] == 0)) {
+                return -1;
+            }
+        }
+        return candidate;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of people: ");
+        int n = scanner.nextInt();
+        int[][] relationshipMatrix = new int[n][n];
+
+        System.out.println("Enter the relationship matrix:");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                relationshipMatrix[i][j] = scanner.nextInt();
+            }
+        }
+
+        CelebrityProblem solution = new CelebrityProblem();
+        int celebrityId = solution.findCelebrity(relationshipMatrix, n);
+
+        if (celebrityId != -1) {
+            System.out.println("Celebrity ID: " + celebrityId);
+        } else {
+            System.out.println("No Celebrity");
+        }
+    }
+}
