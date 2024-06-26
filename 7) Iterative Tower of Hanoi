@@ -1,0 +1,58 @@
+import java.util.Stack;
+
+public class TowerOfHanoi {
+    // Utility function to move disks between two poles
+    static void moveDisksBetweenTwoPoles(Stack<Integer> src, Stack<Integer> dest, char s, char d) {
+        int pole1TopDisk = (src.isEmpty()) ? Integer.MAX_VALUE : src.pop();
+        int pole2TopDisk = (dest.isEmpty()) ? Integer.MAX_VALUE : dest.pop();
+
+        // Moving the disk between poles
+        if (pole1TopDisk > pole2TopDisk) {
+            src.push(pole1TopDisk);
+            src.push(pole2TopDisk);
+            System.out.println("Move disk " + pole2TopDisk + " from " + d + " to " + s);
+        } else {
+            dest.push(pole2TopDisk);
+            dest.push(pole1TopDisk);
+            System.out.println("Move disk " + pole1TopDisk + " from " + s + " to " + d);
+        }
+    }
+
+    // Function to implement TOH puzzle
+    static void tohIterative(int num_of_disks, Stack<Integer> src, Stack<Integer> auxiliary, Stack<Integer> dest) {
+        int i, total_num_of_moves;
+        char s = 'A', a = 'B', d = 'C';
+
+        // If number of disks is even, swap destination and auxiliary
+        if (num_of_disks % 2 == 0) {
+            char temp = d;
+            d = a;
+            a = temp;
+        }
+        total_num_of_moves = (int) (Math.pow(2, num_of_disks) - 1);
+
+        // Larger disks will be pushed first
+        for (i = num_of_disks; i >= 1; i--)
+            src.push(i);
+
+        for (i = 1; i <= total_num_of_moves; i++) {
+            if (i % 3 == 1) {
+                moveDisksBetweenTwoPoles(src, dest, s, d);
+            } else if (i % 3 == 2) {
+                moveDisksBetweenTwoPoles(src, auxiliary, s, a);
+            } else if (i % 3 == 0) {
+                moveDisksBetweenTwoPoles(auxiliary, dest, a, d);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        // Input: Number of disks
+        int num_of_disks = 3;
+        Stack<Integer> src = new Stack<>();
+        Stack<Integer> auxiliary = new Stack<>();
+        Stack<Integer> dest = new Stack<>();
+
+        tohIterative(num_of_disks, src, auxiliary, dest);
+    }
+}
