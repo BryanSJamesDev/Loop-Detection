@@ -1,0 +1,96 @@
+import java.util.Arrays;
+
+public class InPlaceSorting {
+
+    // QuickSort implementation
+    public static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pivotIndex = partition(arr, low, high);
+            quickSort(arr, low, pivotIndex - 1);
+            quickSort(arr, pivotIndex + 1, high);
+        }
+    }
+
+    private static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                swap(arr, i, j);
+            }
+        }
+        swap(arr, i + 1, high);
+        return i + 1;
+    }
+
+    // MergeSort implementation
+    public static void mergeSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int mid = (low + high) / 2;
+            mergeSort(arr, low, mid);
+            mergeSort(arr, mid + 1, high);
+            merge(arr, low, mid, high);
+        }
+    }
+
+    private static void merge(int[] arr, int low, int mid, int high) {
+        int n1 = mid - low + 1;
+        int n2 = high - mid;
+
+        // Create temp arrays
+        int[] left = new int[n1];
+        int[] right = new int[n2];
+
+        // Copy data to temp arrays
+        for (int i = 0; i < n1; ++i)
+            left[i] = arr[low + i];
+        for (int j = 0; j < n2; ++j)
+            right[j] = arr[mid + 1 + j];
+
+        // Merge the temp arrays
+        int i = 0, j = 0, k = low;
+        while (i < n1 && j < n2) {
+            if (left[i] <= right[j]) {
+                arr[k] = left[i];
+                i++;
+            } else {
+                arr[k] = right[j];
+                j++;
+            }
+            k++;
+        }
+
+        // Copy remaining elements of left[] if any
+        while (i < n1) {
+            arr[k] = left[i];
+            i++;
+            k++;
+        }
+
+        // Copy remaining elements of right[] if any
+        while (j < n2) {
+            arr[k] = right[j];
+            j++;
+            k++;
+        }
+    }
+
+    private static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {10, 7, 8, 9, 1, 5};
+        System.out.println("Original array: " + Arrays.toString(arr));
+        
+        quickSort(arr, 0, arr.length - 1);
+        System.out.println("Sorted array with QuickSort: " + Arrays.toString(arr));
+        
+        int[] arr2 = {10, 7, 8, 9, 1, 5};
+        mergeSort(arr2, 0, arr2.length - 1);
+        System.out.println("Sorted array with MergeSort: " + Arrays.toString(arr2));
+    }
+}
