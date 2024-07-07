@@ -1,0 +1,72 @@
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int x) {
+        val = x;
+    }
+}
+
+public class BSTRecovery {
+    TreeNode firstElement = null;
+    TreeNode secondElement = null;
+    TreeNode prevElement = new TreeNode(Integer.MIN_VALUE);
+
+    public void recoverTree(TreeNode root) {
+        // Inorder traversal to find the two elements
+        traverse(root);
+
+        // Swap the values of the first and second element
+        int temp = firstElement.val;
+        firstElement.val = secondElement.val;
+        secondElement.val = temp;
+    }
+
+    private void traverse(TreeNode root) {
+        if (root == null) return;
+
+        traverse(root.left);
+
+        // Start of "do some business",
+        // If first element has not been found, assign it to prevElement (the first element out of order)
+        if (firstElement == null && prevElement.val >= root.val) {
+            firstElement = prevElement;
+        }
+        // If first element is found, assign the second element to the root (the second element out of order)
+        if (firstElement != null && prevElement.val >= root.val) {
+            secondElement = root;
+        }
+        prevElement = root;
+
+        traverse(root.right);
+    }
+
+    public static void printInorder(TreeNode node) {
+        if (node == null) return;
+        printInorder(node.left);
+        System.out.print(node.val + " ");
+        printInorder(node.right);
+    }
+
+    public static void main(String[] args) {
+        // Setup the tree
+        TreeNode root = new TreeNode(3);
+        root.left = new TreeNode(1);
+        root.right = new TreeNode(4);
+        root.right.left = new TreeNode(2);
+
+        // Print original tree
+        System.out.println("Inorder traversal of the original tree:");
+        printInorder(root);
+        System.out.println();
+
+        // Recover the tree
+        BSTRecovery recovery = new BSTRecovery();
+        recovery.recoverTree(root);
+
+        // Print recovered tree
+        System.out.println("Inorder traversal of the recovered tree:");
+        printInorder(root);
+    }
+}
