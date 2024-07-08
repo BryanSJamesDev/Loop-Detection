@@ -1,0 +1,104 @@
+import java.util.*;
+
+class TreeNode {
+    char val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(char x) {
+        val = x;
+    }
+}
+
+public class TreeViews {
+    // Helper class for nodes in tree views
+    static class NodeInfo {
+        TreeNode node;
+        int hd; // horizontal distance
+
+        NodeInfo(TreeNode node, int hd) {
+            this.node = node;
+            this.hd = hd;
+        }
+    }
+
+    public static List<Character> horizontalView(TreeNode root) {
+        List<Character> view = new ArrayList<>();
+        if (root == null) return view;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            view.add(node.val);
+            if (node.left != null) queue.offer(node.left);
+            if (node.right != null) queue.offer(node.right);
+        }
+        return view;
+    }
+
+    public static List<Character> verticalView(TreeNode root) {
+        List<Character> view = new ArrayList<>();
+        if (root == null) return view;
+        Map<Integer, List<Character>> map = new TreeMap<>();
+        Queue<NodeInfo> queue = new LinkedList<>();
+        queue.offer(new NodeInfo(root, 0));
+        while (!queue.isEmpty()) {
+            NodeInfo info = queue.poll();
+            map.computeIfAbsent(info.hd, k -> new ArrayList<>()).add(info.node.val);
+            if (info.node.left != null) queue.offer(new NodeInfo(info.node.left, info.hd - 1));
+            if (info.node.right != null) queue.offer(new NodeInfo(info.node.right, info.hd + 1));
+        }
+        map.values().forEach(v -> view.addAll(v));
+        return view;
+    }
+
+    public static List<Character> leftView(TreeNode root) {
+        List<Character> view = new ArrayList<>();
+        if (root == null) return view;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (i == 0) view.add(node.val);
+                if (node.left != null) queue.offer(node.left);
+                if (node.right != null) queue.offer(node.right);
+            }
+        }
+        return view;
+    }
+
+    public static List<Character> rightView(TreeNode root) {
+        List<Character> view = new ArrayList<>();
+        if (root == null) return view;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (i == size - 1) view.add(node.val);
+                if (node.left != null) queue.offer(node.left);
+                if (node.right != null) queue.offer(node.right);
+            }
+        }
+        return view;
+    }
+
+    public static void main(String[] args) {
+        TreeNode root = new TreeNode('A');
+        root.left = new TreeNode('B');
+        root.right = new TreeNode('C');
+        root.left.left = new TreeNode('D');
+        root.left.right = new TreeNode('E');
+        root.right.left = new TreeNode('F');
+        root.right.right = new TreeNode('G');
+
+        System.out.println("Horizontal View: " + horizontalView(root));
+        System.out.println("Vertical View: " + verticalView(root));
+        System.out.println("Left View: " + leftView(root));
+        System.out.println("Right View: " + rightView(root));
+    }
+}
+
