@@ -1,0 +1,77 @@
+import java.util.*;
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    public TreeNode(int val) {
+        this.val = val;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class BinaryTreeBoundaryTraversal {
+    public static void main(String[] args) {
+        // Constructing the example tree
+        TreeNode root = new TreeNode(8);
+        root.left = new TreeNode(3);
+        root.right = new TreeNode(10);
+        root.left.left = new TreeNode(1);
+        root.left.right = new TreeNode(6);
+        root.left.right.left = new TreeNode(4);
+        root.left.right.right = new TreeNode(7);
+        root.right.right = new TreeNode(14);
+        root.right.right.left = new TreeNode(13);
+
+        // Calling the boundaryTraversal function
+        boundaryTraversal(root);
+    }
+
+    public static void boundaryTraversal(TreeNode root) {
+        if (root != null) {
+            System.out.print(root.val + " "); // print the root
+            printLeftBoundary(root.left);     // print the left boundary
+            printLeaves(root.left);           // print left subtree leaves
+            printLeaves(root.right);          // print right subtree leaves
+            printRightBoundary(root.right);   // print the right boundary
+        }
+    }
+
+    private static void printLeftBoundary(TreeNode node) {
+        if (node != null) {
+            if (node.left != null) {
+                // Ensure top down order, print before recursive call
+                System.out.print(node.val + " ");
+                printLeftBoundary(node.left);
+            } else if (node.right != null) {
+                System.out.print(node.val + " ");
+                printLeftBoundary(node.right);
+            }
+        }
+    }
+
+    private static void printRightBoundary(TreeNode node) {
+        if (node != null) {
+            if (node.right != null) {
+                // Ensure bottom up order, first call recursively then print
+                printRightBoundary(node.right);
+                System.out.print(node.val + " ");
+            } else if (node.left != null) {
+                printRightBoundary(node.left);
+                System.out.print(node.val + " ");
+            }
+        }
+    }
+
+    private static void printLeaves(TreeNode node) {
+        if (node != null) {
+            printLeaves(node.left);
+            if (node.left == null && node.right == null) {
+                System.out.print(node.val + " ");
+            }
+            printLeaves(node.right);
+        }
+    }
+}
